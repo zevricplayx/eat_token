@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="Generate Free Fire access tokens from Garena callback URLs">
+    <title>🚀 Eat Token Generator | Free Fire Token Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff006e;
+            --secondary: #8338ec;
+            --accent: #3a86ff;
+            --dark: #0a0e27;
+            --darker: #050a15;
+            --light: #f0f0f0;
+            --border: #2a2d42;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 110, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(131, 56, 236, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: glow 8s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255, 0, 110, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(131, 56, 236, 0.2);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Main Card */
+        .card {
+            background: rgba(42, 45, 66, 0.4);
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Provider Selection */
+        .provider-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .providers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .provider-btn {
+            background: rgba(131, 56, 236, 0.15);
+            border: 2px solid transparent;
+            color: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .provider-btn:hover {
+            background: rgba(131, 56, 236, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(131, 56, 236, 0.2);
+        }
+
+        .provider-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.4);
+        }
+
+        /* Input Section */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--light);
+            font-size: 0.95rem;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--light);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 0, 110, 0.1);
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.2);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 0, 110, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(131, 56, 236, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(131, 56, 236, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Output Section */
+        .output-section {
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-item {
+            background: rgba(131, 56, 236, 0.1);
+            border: 1px solid rgba(131, 56, 236, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(131, 56, 236, 0.2);
+        }
+
+        .info-label {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: var(--light);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .json-output {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .json-output pre {
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .status-message.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.5);
+            color: #4caf50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.5);
+            color: #f44336;
+        }
+
+        .status-info {
+            background: rgba(58, 134, 255, 0.2);
+            border: 1px solid rgba(58, 134, 255, 0.5);
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+            }
+
+            .providers {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .spinner {
+            border: 3px solid rgba(255, 0, 110, 0.2);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .copy-badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-badge:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🔥 EAT TOKEN</div>
+            <div class="subtitle">Free Fire Token Generator</div>
+            <div class="badge">⚡ Extract Tokens Instantly</div>
+        </header>
+
+        <div class="card">
+            <!-- Status Messages -->
+            <div id="statusMessage" class="status-message">
+                <i class="fas fa-info-circle"></i>
+                <span id="statusText"></span>
+            </div>
+
+            <!-- Step 1: Provider Selection -->
+            <div class="provider-section">
+                <div class="section-title">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Step 1: Select Provider & Login
+                </div>
+                <div class="providers">
+                    <button class="provider-btn" onclick="selectProvider('google')" title="Google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('facebook')" title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('apple')" title="Apple">
+                        <i class="fab fa-apple"></i>
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('twitter')" title="X (Twitter)">
+                        <i class="fab fa-x-twitter"></i>
+                    </button>
+                    <button class="provider-btn" onclick="selectProvider('vk')" title="VK">
+                        <i class="fab fa-vk"></i>
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label>ℹ️ After login, look for callback URLs in your browser history containing:</label>
+                    <p style="color: #aaa; font-size: 0.9rem; margin-top: 10px;">
+                        • /callback/?eat=<br>
+                        • ?eat=<br>
+                        • api-ticket.ff.gameid.garena.co.id<br>
+                        • ticket.kiosgamer.co.id
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2: URL Input -->
+            <div class="input-group">
+                <label>
+                    <i class="fas fa-link" style="color: var(--primary);"></i>
+                    Step 2: Paste Callback URL
+                </label>
+                <textarea id="callbackUrl" placeholder="https://api-ticket.ff.gameid.garena.co.id/oauth/callback/?eat=YOUR_EAT_TOKEN&lang=en&region=..."></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="generateToken()">
+                    <i class="fas fa-magic"></i>
+                    GENERATE TOKEN
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()">
+                    <i class="fas fa-trash"></i>
+                    CLEAR
+                </button>
+            </div>
+
+            <!-- Output Section -->
+            <div id="outputSection" class="output-section">
+                <div class="section-title">
+                    <i class="fas fa-check-circle"></i>
+                    Generated Output
+                </div>
+
+                <!-- Info Grid -->
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">EAT Token</div>
+                        <div class="info-value" id="eatToken">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Account ID</div>
+                        <div class="info-value" id="accountId">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Region</div>
+                        <div class="info-value" id="region">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nickname</div>
+                        <div class="info-value" id="nickname">-</div>
+                    </div>
+                </div>
+
+                <!-- JSON Response -->
+                <div class="input-group">
+                    <label>
+                        <i class="fas fa-code" style="color: var(--accent);"></i>
+                        Full JSON Response
+                    </label>
+                    <div class="json-output">
+                        <pre id="jsonOutput">{}</pre>
+                    </div>
+                </div>
+
+                <!-- Copy Button -->
+                <button class="btn btn-primary btn-full" onclick="copyFullResponse()">
+                    <i class="fas fa-copy"></i>
+                    COPY FULL RESPONSE
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>⚠️ <strong>Educational Purpose Only</strong> - Use responsibly and respect Garena ToS</p>
+            <p style="margin-top: 15px; font-size: 0.85rem;">Made with ❤️ by <strong>Killer Sharma</strong> | Improved Version</p>
+            <div class="social-links">
+                <a href="https://github.com/zevricplayx/eat_token" title="GitHub" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://t.me/KillerSharmaBot" title="Telegram" target="_blank">
+                    <i class="fab fa-telegram"></i>
+                </a>
+                <a href="https://instagram.com/KillerSharmaBot" title="Instagram" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let selectedProvider = null;
+
+        // Select Provider
+        function selectProvider(provider) {
+            selectedProvider = provider;
+            document.querySelectorAll('.provider-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.provider-btn').classList.add('active');
+            showStatus(`Selected: ${provider.toUpperCase()}`, 'info');
+        }
+
+        // Generate Token
+        function generateToken() {
+            const url = document.getElementById('callbackUrl').value.trim();
+            
+            if (!url) {
+                showStatus('Please paste the callback URL', 'error');
+                return;
+            }
+
+            try {
+                const urlObj = new URL(url);
+                const params = new URLSearchParams(urlObj.search);
+
+                const eatToken = params.get('eat');
+                const accountId = params.get('account_id');
+                const region = params.get('region');
+                const nickname = params.get('nickname');
+                const lang = params.get('lang') || 'en';
+
+                if (!eatToken) {
+                    showStatus('EAT token not found in URL. Check if URL is correct.', 'error');
+                    return;
+                }
+
+                // Display extracted values
+                document.getElementById('eatToken').textContent = eatToken.substring(0, 50) + '...';
+                document.getElementById('accountId').textContent = accountId || 'N/A';
+                document.getElementById('region').textContent = region || 'N/A';
+                document.getElementById('nickname').textContent = nickname || 'N/A';
+
+                // Generate JSON response
+                const jsonResponse = {
+                    access_token: eatToken,
+                    token_type: "Bearer",
+                    expires_in: 3600,
+                    account_id: accountId,
+                    region: region,
+                    nickname: nickname,
+                    language: lang,
+                    created_at: new Date().toISOString(),
+                    platform: selectedProvider || 'unknown'
+                };
+
+                document.getElementById('jsonOutput').textContent = JSON.stringify(jsonResponse, null, 2);
+                document.getElementById('outputSection').classList.add('show');
+                showStatus('Token extracted successfully! ✅', 'success');
+
+            } catch (error) {
+                showStatus('Invalid URL format. Please check your callback URL.', 'error');
+                console.error(error);
+            }
+        }
+
+        // Copy Full Response
+        function copyFullResponse() {
+            const jsonText = document.getElementById('jsonOutput').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                showStatus('Response copied to clipboard! 📋', 'success');
+            }).catch(() => {
+                showStatus('Failed to copy. Try again.', 'error');
+            });
+        }
+
+        // Clear All
+        function clearAll() {
+            document.getElementById('callbackUrl').value = '';
+            document.getElementById('outputSection').classList.remove('show');
+            document.querySelectorAll('.provider-btn').forEach(btn => btn.classList.remove('active'));
+            selectedProvider = null;
+            showStatus('Cleared all data', 'info');
+        }
+
+        // Show Status Message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            const statusText = document.getElementById('statusText');
+            
+            statusDiv.className = `status-message show status-${type}`;
+            statusText.textContent = message;
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Enter key support
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                generateToken();
+            }
+        });
+    </script>
+</body>
+</html>
